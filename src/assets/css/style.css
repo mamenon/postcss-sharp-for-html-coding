@@ -1,0 +1,35 @@
+p {
+  color: red;
+
+  &:hover {
+    color: green;
+    display: block;
+  }
+
+  > .bar {
+    color: blue;
+  }
+
+  @media (430px <= width) {
+    display: block;
+  }
+  @media (992px <= width) {
+    display: inline;
+  }
+  @media (768px <= width ) {
+    display: grid;
+  }
+}
+
+h2 {
+  display: block;
+  color: aqua;
+
+  @media (768px <= width ) {
+    display: inline;
+  }
+  @media (1024px <= width ) {
+    display: grid;
+  }
+
+}
