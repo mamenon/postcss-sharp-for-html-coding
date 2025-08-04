@@ -7,14 +7,14 @@ async function processImage(inputPath) {
   const fileName = path.basename(inputPath); //ファイル名を取得する
   const outPutDir = `dist${dirName.replace("src", "")}`; //ディレクトリ名のファイルパスにsrcがあったら空文字にする
   const fileNameOnly = fileName.replace(/^(.+)\..+$/, "$1");
-  const breakpoints = [768, 1024];
+  // const breakpoints = [768, 1024];
 
   try {
     // ディレクトリがなければ作成
     await fs.mkdir("dist/assets/images", { recursive: true });
 
     // サブディレクトリがなければ作成
-    await fs.mkdir("dist/assets/images/webp", { recursive: true });
+    // await fs.mkdir("dist/assets/images/webp", { recursive: true });
 
     const fileFormat = getExtension(fileName); //ファイルの拡張子を抽出（.jpeg　なら　jpeg　だけ）
 
@@ -22,14 +22,14 @@ async function processImage(inputPath) {
     let webp = sharp(`${dirName}/${fileName}`);
 
     if (fileFormat === "jpg" || fileFormat === "jpeg") {
-      sh = sh.jpeg({ quality: 70 });
-      webp = webp.webp({ quality: 70, lossless: true });
+      sh = sh.jpeg({ quality: 90 });
+      webp = webp.webp({ quality: 90, lossless: true });
     } else if (fileFormat === "png") {
-      sh = sh.png({ quality: 70 });
-      webp = webp.webp({ quality: 70, lossless: true });
+      sh = sh.png({ quality: 90 });
+      webp = webp.webp({ quality: 90, lossless: true });
     } else if (fileFormat === "gif") {
-      sh = sh.gif({ quality: 70 });
-      webp = webp.webp({ quality: 70, lossless: true });
+      sh = sh.gif({ quality: 90 });
+      webp = webp.webp({ quality: 90, lossless: true });
     } else if (fileFormat === "svg") {
       await fs.copyFile(inputPath, `${outPutDir}/${fileName}`);
       console.log(`\u001b[1;32m ${fileName}を${outPutDir}に複製しました。`);
@@ -42,7 +42,7 @@ async function processImage(inputPath) {
     const [shInfo, webpInfo] = await Promise.all([
       sh.toFile(`${outPutDir}/${fileName}`),
       webp.toFile(
-        `${outPutDir}/webp/${fileName.replace(/\.[^/.]+$/, ".webp")}`
+        `${outPutDir}/${fileName.replace(/\.[^/.]+$/, ".webp")}`
       ),
       // webp.toFile(`${outPutDir}/webp/${fileName}.webp`),
     ]);
@@ -55,22 +55,22 @@ async function processImage(inputPath) {
     );
 
     // breakpoint の幅でリサイズ
-    for (const breakpoint of breakpoints) {
-      if (shInfo.width > breakpoint) {
-        const resizedImage = sharp(`${outPutDir}/${fileName}`)
-          .resize(breakpoint)
-          .toFile(`${outPutDir}/${fileNameOnly}_${breakpoint}.${fileFormat}`);
-        console.log(
-          `\u001b[1;32m ${fileName}を幅 ${breakpoint}px にリサイズしました.`
-        );
-        const resizedWebp = sharp(`${outPutDir}/${fileName}`)
-          .resize(breakpoint)
-          .toFile(`${outPutDir}/webp/${fileNameOnly}_${breakpoint}.webp`);
-        console.log(
-          `\u001b[1;32m ${fileName}を幅 ${breakpoint}px にリサイズし、WebPに変換しました.`
-        );
-      }
-    }
+    // for (const breakpoint of breakpoints) {
+    //   if (shInfo.width > breakpoint) {
+    //     const resizedImage = sharp(`${outPutDir}/${fileName}`)
+    //       .resize(breakpoint)
+    //       .toFile(`${outPutDir}/${fileNameOnly}_${breakpoint}.${fileFormat}`);
+    //     console.log(
+    //       `\u001b[1;32m ${fileName}を幅 ${breakpoint}px にリサイズしました.`
+    //     );
+    //     const resizedWebp = sharp(`${outPutDir}/${fileName}`)
+    //       .resize(breakpoint)
+    //       .toFile(`${outPutDir}/webp/${fileNameOnly}_${breakpoint}.webp`);
+    //     console.log(
+    //       `\u001b[1;32m ${fileName}を幅 ${breakpoint}px にリサイズし、WebPに変換しました.`
+    //     );
+    //   }
+    // }
   } catch (err) {
     if (err.code === "ENOENT") {
       console.error(`\u001b[1;31m ${err.message}`);

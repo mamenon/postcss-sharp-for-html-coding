@@ -1,10 +1,13 @@
+h1 {
+  color: green;
+}
 p {
   color: red;
 
-  &:hover {
+  /* &:hover {
     color: green;
     display: block;
-  }
+  } */
 
   > .bar {
     color: blue;
